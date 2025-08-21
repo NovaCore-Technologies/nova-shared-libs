@@ -1,0 +1,154 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>ai.novaerp</groupId>
+    <artifactId>nova-shared-libs</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>dto</artifactId>
+  <packaging>jar</packaging>
+
+  <name>Nova Shared DTO</name>
+  <description>DTOs generated from OpenAPI contracts for Nova microservices</description>
+
+  <dependencies>
+    <!-- Dependencias comunes para DTOs -->
+    <dependency>
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
+      <version>2.1.1</version>
+    </dependency>
+
+    <!-- Jackson for serialization -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+    </dependency>
+
+    <!-- Validation -->
+    <dependency>
+      <groupId>jakarta.validation</groupId>
+      <artifactId>jakarta.validation-api</artifactId>
+    </dependency>
+    <!-- Lombok -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!-- Plugin de OpenAPI Generator -->
+      <plugin>
+        <groupId>org.openapitools</groupId>
+        <artifactId>openapi-generator-maven-plugin</artifactId>
+        <version>7.7.0</version>
+        <executions>
+          <execution>
+            <id>generate-auth-dtos</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <inputSpec>
+                ${project.basedir}/../../nova-api-contracts/contracts/auth/v1/auth-api-v1.yaml
+              </inputSpec>
+              <generatorName>java</generatorName>
+              <apiPackage>com.nova.shared.dto.auth.api</apiPackage>
+              <modelPackage>com.nova.shared.dto.auth.model</modelPackage>
+              <invokerPackage>com.nova.shared.dto.auth.invoker</invokerPackage>
+              <generateApis>false</generateApis>
+              <generateApiTests>false</generateApiTests>
+              <generateApiDocumentation>false</generateApiDocumentation>
+              <generateModelTests>false</generateModelTests>
+              <generateModelDocumentation>false</generateModelDocumentation>
+              <generateSupportingFiles>false</generateSupportingFiles>
+              <library>resttemplate</library>
+              <configOptions>
+                <dateLibrary>java8</dateLibrary>
+                <!-- serializationLibrary>jackson</serializationLibrary -->
+                <useJakartaEe>true</useJakartaEe>
+              </configOptions>
+              <output>${project.build.directory}/generated-sources/auth</output>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>generate-user-dtos</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <inputSpec>
+                ${project.basedir}/../../nova-api-contracts/contracts/users/v1/user-api-v1.yaml
+              </inputSpec>
+              <generatorName>java</generatorName>
+              <apiPackage>com.nova.shared.dto.users.api</apiPackage>
+              <modelPackage>com.nova.shared.dto.users.model</modelPackage>
+              <invokerPackage>com.nova.shared.dto.users.invoker</invokerPackage>
+              <generateApis>false</generateApis>
+              <generateApiTests>false</generateApiTests>
+              <generateApiDocumentation>false</generateApiDocumentation>
+              <generateModelTests>false</generateModelTests>
+              <generateModelDocumentation>false</generateModelDocumentation>
+              <generateSupportingFiles>false</generateSupportingFiles>
+              <library>resttemplate</library>
+              <configOptions>
+                <dateLibrary>java8</dateLibrary>
+                <!-- serializationLibrary>jackson</serializationLibrary -->
+                <useJakartaEe>true</useJakartaEe>
+              </configOptions>
+              <output>${project.build.directory}/generated-sources/users</output>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Compilador -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.11.0</version>
+        <configuration>
+          <source>17</source>
+          <target>17</target>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.5.0</version>
+        <executions>
+          <execution>
+            <id>add-source</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${project.build.directory}/generated-sources/auth/src/main/java</source>
+                <source>${project.build.directory}/generated-sources/users/src/main/java</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+</project>

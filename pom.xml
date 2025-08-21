@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Parent POM for nova-shared-libs
+  - Packaging: pom
+  - Modules: core, security, logging, validation, dto
+  - Java 21, Spring Boot BOM 3.3.x for dependency alignment
+  - Centralized plugin/dependency management
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>ai.novaerp</groupId>
+  <artifactId>nova-shared-libs</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>Nova ERP AI - Shared Libraries</name>
+  <description>Reusable DTOs, core utilities, security helpers, logging, and validation components shared across Nova ERP AI microservices.</description>
+  <url>https://github.com/NovaCore-Technologies/nova-shared-libs</url>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <scm>
+    <url>https://github.com/NovaCore-Technologies/nova-shared-libs</url>
+    <connection>scm:git:https://github.com/NovaCore-Technologies/nova-shared-libs.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com:NovaCore-Technologies/nova-shared-libs.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+
+  <developers>
+    <developer>
+      <id>novacore</id>
+      <name>NovaCore Technologies</name>
+      <email>team@novacore.ai</email>
+      <organization>NovaCore</organization>
+      <organizationUrl>https://novaerp.ai</organizationUrl>
+    </developer>
+  </developers>
+
+  <modules>
+    <module>core</module>
+    <module>security</module>
+    <module>logging</module>
+    <module>validation</module>
+    <module>dto</module>
+  </modules>
+
+  <properties>
+    <!-- Java & Encoding -->
+    <java.version>21</java.version>
+    <maven.compiler.release>${java.version}</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <!-- Dependency/BOM versions (kept centralized) -->
+    <spring-boot.version>3.3.3</spring-boot.version>
+    <mapstruct.version>1.5.5.Final</mapstruct.version>
+    <lombok.version>1.18.32</lombok.version>
+    <jjwt.version>0.12.5</jjwt.version>
+    <openapi.generator.version>7.7.0</openapi.generator.version>
+
+    <!-- Plugin versions -->
+    <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
+    <maven.surefire.plugin.version>3.2.5</maven.surefire.plugin.version>
+    <maven.failsafe.plugin.version>3.2.5</maven.failsafe.plugin.version>
+    <maven.javadoc.plugin.version>3.7.0</maven.javadoc.plugin.version>
+    <maven.source.plugin.version>3.3.1</maven.source.plugin.version>
+    <maven.enforcer.plugin.version>3.5.0</maven.enforcer.plugin.version>
+    <versions.maven.plugin.version>2.17.1</versions.maven.plugin.version>
+    <spotless.maven.plugin.version>2.43.0</spotless.maven.plugin.version>
+  </properties>
+
+  <!-- Use Spring Boot BOM only for version alignment; modules are libraries, not Boot apps -->
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring-boot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <!-- Explicit versions for commonly used libs across modules -->
+      <dependency>
+        <groupId>org.mapstruct</groupId>
+        <artifactId>mapstruct</artifactId>
+        <version>${mapstruct.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>${lombok.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-api</artifactId>
+        <version>${jjwt.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-impl</artifactId>
+        <version>${jjwt.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-jackson</artifactId>
+        <version>${jjwt.version}</version>
+      </dependency>
+
+      <!-- Common test libraries (available to all modules unless overridden) -->
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>5.10.3</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>5.12.0</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-junit-jupiter</artifactId>
+        <version>5.12.0</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <version>3.26.3</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <!-- Enforcer: Java version & dep convergence -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>${maven.enforcer.plugin.version}</version>
+          <executions>
+            <execution>
+              <id>enforce-java-and-convergence</id>
+              <goals><goal>enforce</goal></goals>
+              <configuration>
+                <rules>
+                  <requireMavenVersion>
+                    <version>[3.9.0,)</version>
+                  </requireMavenVersion>
+                  <requireJavaVersion>
+                    <version>[21,)</version>
+                  </requireJavaVersion>
+                  <dependencyConvergence/>
+                </rules>
+                <fail>true</fail>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
+        <!-- Compiler -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${maven.compiler.plugin.version}</version>
+          <configuration>
+            <release>${maven.compiler.release}</release>
+            <parameters>true</parameters>
+            <annotationProcessorPaths>
+              <path>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+              </path>
+              <path>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct-processor</artifactId>
+                <version>${mapstruct.version}</version>
+              </path>
+            </annotationProcessorPaths>
+          </configuration>
+        </plugin>
+
+        <!-- Tests -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${maven.surefire.plugin.version}</version>
+          <configuration>
+            <useSystemClassLoader>false</useSystemClassLoader>
+          </configuration>
+        </plugin>
+
+        <!-- Integration tests (if any in modules) -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>${maven.failsafe.plugin.version}</version>
+        </plugin>
+
+        <!-- Javadoc/Jar + Sources/Jar for publishing -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>${maven.javadoc.plugin.version}</version>
+          <configuration>
+            <source>${java.version}</source>
+            <failOnError>false</failOnError>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>${maven.source.plugin.version}</version>
+        </plugin>
+
+        <!-- Formatting (optional but recommended) -->
+        <plugin>
+          <groupId>com.diffplug.spotless</groupId>
+          <artifactId>spotless-maven-plugin</artifactId>
+          <version>${spotless.maven.plugin.version}</version>
+          <configuration>
+            <java>
+              <eclipse>
+                <file>eclipse-java-google-style.xml</file>
+              </eclipse>
+              <removeUnusedImports/>
+              <importOrder/>
+            </java>
+          </configuration>
+        </plugin>
+
+        <!-- OpenAPI Generator: defined here so dto module can bind executions -->
+        <plugin>
+          <groupId>org.openapitools</groupId>
+          <artifactId>openapi-generator-maven-plugin</artifactId>
+          <version>${openapi.generator.version}</version>
+        </plugin>
+
+        <!-- Versions checker -->
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>versions-maven-plugin</artifactId>
+          <version>${versions.maven.plugin.version}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      <!-- Enforce rules at parent level -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+      </plugin>
+      <!-- (Optional) attach sources/javadoc from parent if needed -->
+    </plugins>
+  </build>
+
+  <!-- Default dependencies (rare in a parent). Keep modules light; define in each module POM.
+       We keep only BOM alignment in this parent. -->
+
+  <profiles>
+    <!-- Optional profile to run Spotless formatting -->
+    <profile>
+      <id>format</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.diffplug.spotless</groupId>
+            <artifactId>spotless-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>apply</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+</project>
