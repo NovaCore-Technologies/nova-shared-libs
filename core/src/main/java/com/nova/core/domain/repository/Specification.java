@@ -7,9 +7,11 @@ public interface Specification<T> {
   default Specification<T> and(Specification<T> other) {
     return c -> this.isSatisfiedBy(c) && other.isSatisfiedBy(c);
   }
+
   default Specification<T> or(Specification<T> other) {
     return c -> this.isSatisfiedBy(c) || other.isSatisfiedBy(c);
   }
+
   default Specification<T> not() {
     return c -> !this.isSatisfiedBy(c);
   }
