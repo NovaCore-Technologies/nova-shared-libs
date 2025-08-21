@@ -18,11 +18,22 @@
 
   <dependencies>
     <!-- Dependencias comunes para DTOs -->
+    <dependency>
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
+      <version>2.1.1</version>
+    </dependency>
+
     <!-- Jackson for serialization -->
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+    </dependency>
+
     <!-- Validation -->
     <dependency>
       <groupId>jakarta.validation</groupId>
@@ -64,6 +75,12 @@
               <generateModelTests>false</generateModelTests>
               <generateModelDocumentation>false</generateModelDocumentation>
               <generateSupportingFiles>false</generateSupportingFiles>
+              <library>resttemplate</library>
+              <configOptions>
+                <dateLibrary>java8</dateLibrary>
+                <!-- serializationLibrary>jackson</serializationLibrary -->
+                <useJakartaEe>true</useJakartaEe>
+              </configOptions>
               <output>${project.build.directory}/generated-sources/auth</output>
             </configuration>
           </execution>
@@ -88,6 +105,12 @@
               <generateModelTests>false</generateModelTests>
               <generateModelDocumentation>false</generateModelDocumentation>
               <generateSupportingFiles>false</generateSupportingFiles>
+              <library>resttemplate</library>
+              <configOptions>
+                <dateLibrary>java8</dateLibrary>
+                <!-- serializationLibrary>jackson</serializationLibrary -->
+                <useJakartaEe>true</useJakartaEe>
+              </configOptions>
               <output>${project.build.directory}/generated-sources/users</output>
             </configuration>
           </execution>
