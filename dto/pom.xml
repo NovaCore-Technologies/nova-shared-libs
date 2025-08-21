@@ -1,0 +1,87 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>ai.novaerp</groupId>
+    <artifactId>nova-shared-libs</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>dto</artifactId>
+  <packaging>jar</packaging>
+  <name>Nova Shared DTO</name>
+  <description>DTOs generated from OpenAPI contracts for Nova microservices</description>
+
+  <dependencies>
+    <!-- Jackson for serialization -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+    </dependency>
+
+    <!-- Validation -->
+    <dependency>
+      <groupId>jakarta.validation</groupId>
+      <artifactId>jakarta.validation-api</artifactId>
+    </dependency>
+
+    <!-- Lombok -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!-- OpenAPI Generator -->
+      <plugin>
+        <groupId>org.openapitools</groupId>
+        <artifactId>openapi-generator-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>generate-auth-dtos</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <inputSpec>${project.basedir}/../../nova-api-contracts/contracts/auth/v1/auth-api-v1.yaml</inputSpec>
+              <generatorName>java</generatorName>
+              <library>resttemplate</library>
+              <modelPackage>ai.novaerp.shared.dto.auth</modelPackage>
+              <configOptions>
+                <sourceFolder>src/gen/java</sourceFolder>
+                <dateLibrary>java8</dateLibrary>
+                <useJakartaEe>true</useJakartaEe>
+                <modelsOnly>true</modelsOnly>
+              </configOptions>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>generate-user-dtos</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <inputSpec>${project.basedir}/../../nova-api-contracts/contracts/users/v1/user-api-v1.yaml</inputSpec>
+              <generatorName>java</generatorName>
+              <library>resttemplate</library>
+              <modelPackage>ai.novaerp.shared.dto.user</modelPackage>
+              <configOptions>
+                <sourceFolder>src/gen/java</sourceFolder>
+                <dateLibrary>java8</dateLibrary>
+                <useJakartaEe>true</useJakartaEe>
+                <modelsOnly>true</modelsOnly>
+              </configOptions>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
