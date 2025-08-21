@@ -47,5 +47,21 @@
       <artifactId>lombok</artifactId>
       <scope>provided</scope>
     </dependency>
+
+    <!-- Spring Web (for controller annotations in examples) -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+            <version>3.3.2</version> <!-- usa la versión que tengas en spring-boot-starter-parent -->
+        </plugin>
+    </plugins>
+</build>
 </project>
