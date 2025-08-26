@@ -1,9 +1,8 @@
+// SecurityContext.java
 package com.nova.shared.security.core;
 
-import java.util.Optional;
-
 public interface SecurityContext {
-    Optional<AuthenticatedUser> currentUser();
-    void set(AuthenticatedUser user);
+    AuthenticatedUser getUser();
+    void setUser(AuthenticatedUser user);
     void clear();
 }

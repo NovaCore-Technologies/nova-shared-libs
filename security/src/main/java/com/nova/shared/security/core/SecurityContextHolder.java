@@ -1,21 +1,27 @@
+// SecurityContextHolder.java
 package com.nova.shared.security.core;
 
-import java.util.Optional;
+public final class SecurityContextHolder {
 
-public final class SecurityContextHolder implements SecurityContext {
-    private static final ThreadLocal<AuthenticatedUser> HOLDER = new ThreadLocal<>();
+    private static final ThreadLocal<SecurityContext> CONTEXT = 
+        ThreadLocal.withInitial(SecurityContextImpl::new);
 
     private SecurityContextHolder() {}
 
-    private static final SecurityContext INSTANCE = new SecurityContextHolder();
+    public static SecurityContext getContext() {
+        return CONTEXT.get();
+    }
 
-    public static SecurityContext get() { return INSTANCE; }
+    public static void setUser(AuthenticatedUser user) {
+        getContext().setUser(user);
+    }
 
-    public static void set(AuthenticatedUser user) { HOLDER.set(user); }
-    public static Optional<AuthenticatedUser> current() { return Optional.ofNullable(HOLDER.get()); }
-    public static void clear() { HOLDER.remove(); }
+    public static AuthenticatedUser getUser() {
+        return getContext().getUser();
+    }
 
-    @Override public Optional<AuthenticatedUser> currentUser() { return current(); }
-    @Override public void set(AuthenticatedUser user) { set(user); }
-    @Override public void clear() { clear(); }
+    public static void clearContext() {
+        getContext().clear();
+        CONTEXT.remove();
+    }
 }
